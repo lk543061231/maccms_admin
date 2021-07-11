@@ -1,7 +1,5 @@
 {include file="../../../application/admin/view/public/head" /}
-<link rel="stylesheet" type="text/css" href="__STATIC__/pear/css/pear.css">
-<link rel="stylesheet" type="text/css" href="__STATIC__/admin/css/load.css">
-<link rel="stylesheet" type="text/css" href="__STATIC__/admin/css/admin.css">
+
 <style type="text/css">
     .hs-iframe {
         width: 100%;
@@ -43,6 +41,10 @@
         bottom: 0;
         z-index: 998;
     }
+    
+    .layui-nav-item {
+        text-align: center;
+    }
 </style>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header header-top">
@@ -65,12 +67,13 @@
 
     </div>
 
+    <!-- 顶部导航 -->
     <div class="layui-header">
         <div class="fl header-logo">{:lang('admin/index/index/name')}</div>
         <div class="fl header-fold topLevelMenus"><a href="javascript:;" title="{:lang('admin/index/index/menu_switch')}" class="aicon ai-caidan" id="foldSwitch"><i class="layui-icon">&#xe65f;</i></a></div>
         <a href="javascript:;" class=" site-tree-mobile layui-mobile layui-show-xs-block layui-hide-lg"><i class="layui-icon layui-icon-spread-left size-20"></i></a>
         <div class="bottom-nav">
-            <ul class="layui-nav fl nobg main-nav ">
+            <!-- <ul class="layui-nav fl nobg main-nav ">
                 {volist name="menus" id="vo"} {if condition="($i eq 1)"}
                 <li class="layui-nav-item layui-this main-nav mob-nav" data-i="{$i}">
                     {else /}
@@ -79,7 +82,7 @@
                         <a href="javascript:;" data-i="{$i}">{$vo['name']}</a>
                     </li>
                     {/volist}
-            </ul>
+            </ul> -->
             <ul class="layui-nav layui-layout-right" lay-filter="">
                 <li class="layui-nav-item layui-hide-xs">
                     <a href="javascript:void(0);">{:lang('opt')}&nbsp;&nbsp;</a>
@@ -109,15 +112,17 @@
     </div>
 
     <!-- 左边菜单 -->
-    <div class="layui-side layui-bg-black" id="switchNav">
-        <div class="layui-side-scroll navBar" id="navBar">
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll navBar">
+
             {volist name="menus" id="v"} {if condition="($i eq 1)"}
             <ul class="layui-nav layui-nav-tree">
                 {else /}
-                <ul class="layui-nav layui-nav-tree" style="display:none;">
+                <ul class="layui-nav layui-nav-tree" id="menuItem" lay-filter="test">
                     {/if}
-                    <li class="layui-nav-item layui-nav-itemed">
-                        <a href="javascript:;"><i class="{$v['icon']}"></i>{$v['name']}<span class="layui-nav-more"></span></a>
+                    <li class="layui-nav-item ">
+                        <a href="javascript:;">
+                            <i class="{$v['icon']}"></i>{$v['name']}<span class="layui-icon layui-icon-down layui-nav-more"></span></a>
 
                         <dl class="layui-nav-child">
                             {volist name="v['sub']" id="vv" key="kk"}
@@ -184,7 +189,6 @@
         $('body').toggleClass('drawer-body-right');
     })
 </script>
-<script type="text/javascript" src="__STATIC__/pear/pear.js"></script>
 <script type="text/javascript">
     layui.use(['element', 'layer'], function() {
         var $ = layui.jquery,
@@ -230,6 +234,12 @@
             });
         });
 
+        $('.layui-nav-item').on('click', function() {
+            var doms = $(this).parent().siblings()
+            for (var i = 0; i < doms.length; i++) {
+                $(doms[i]).children(":first").removeClass('layui-nav-itemed')
+            }
+        })
 
         //显示顶部导航时作位置判断，点击左边菜单、上一tab、下一tab时公用
         function showTab(li) {
